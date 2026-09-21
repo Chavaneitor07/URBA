@@ -649,3 +649,99 @@ scroll-behavior: auto;
   }
 
 }
+
+
+/* ================================
+   AJUSTES PARA CELULAR
+================================ */
+
+html { -webkit-text-size-adjust: 100%; }
+body { overflow-x: clip; }
+.chip, .nav-toggle { font-family: inherit; }
+
+@media (max-width: 760px) {
+
+  .wrap { padding: 0 20px; }
+  .nav { padding: 14px 20px; }
+  .brand { font-size: 1.1rem; }
+  .nav-toggle { padding: 6px 10px; line-height: 1; }
+
+  /* menú desplegable */
+  .nav-links.mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    border-bottom: 1px solid rgba(198, 160, 95, 0.25);
+    padding: 6px 20px 14px;
+  }
+  .nav-links.mobile-menu a {
+    padding: 14px 0;
+    font-size: 1.05rem;
+    border-bottom: 1px solid rgba(198, 160, 95, 0.12);
+  }
+
+  section { padding: 52px 0; }
+  .hero { padding: 40px 0 56px; }
+  .hero-container { gap: 32px; }
+  .hero-copy h1 { font-size: 2.15rem; }
+  .hero-copy h1 br { display: none; }
+  .hero-copy p { font-size: 1rem; }
+  .hero-actions { flex-direction: column; align-items: stretch; gap: 8px; }
+  .hero-actions a { justify-content: center; }
+  .hero-art { max-width: 300px; margin: 0 auto; }
+
+  .section-head { margin-bottom: 28px; }
+  .section-head p { max-width: none; }
+
+  .styles-row { grid-auto-columns: 75%; scroll-snap-type: x mandatory; }
+  .style-card { scroll-snap-align: start; }
+
+  .grid-portfolio { gap: 10px; }
+  .grid-portfolio > div { padding: 12px; font-size: 0.75rem; }
+
+  .process { grid-template-columns: 1fr; }
+
+  .quick { grid-template-columns: minmax(0, 1fr); padding: 28px 20px; gap: 28px; }
+  .chip { padding: 10px 16px; }
+  #quick-send { width: 100%; justify-content: center; }
+
+  .contact { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .info-line { overflow-wrap: anywhere; }
+
+  footer { padding-bottom: 88px; }
+  .footer-row { flex-direction: column; }
+  .wa-float { width: 52px; height: 52px; bottom: 16px; right: 16px; }
+}
+
+
+/* ================================
+   MAPA
+================================ */
+
+.info-line a {
+  text-decoration: underline;
+  text-decoration-color: rgba(198, 160, 95, 0.5);
+  text-underline-offset: 3px;
+}
+
+.info-line a:hover {
+  color: var(--gold);
+}
+
+.map {
+  margin-top: 20px;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(198, 160, 95, 0.25);
+  background: var(--ink-soft);
+}
+
+.map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
