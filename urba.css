@@ -88,6 +88,14 @@ height: 26px;
 flex-shrink: 0;
 }
 
+.brand-logo {
+width: 32px;
+height: 32px;
+border-radius: 50%;
+object-fit: cover;
+flex-shrink: 0;
+}
+
 .nav-links {
 display: flex;
 gap: 32px;
@@ -533,6 +541,37 @@ margin-bottom: 12px;
 color: var(--muted);
 font-size: 0.9rem;
 margin-bottom: 0;
+}
+
+.faq {
+margin: 0;
+}
+
+.faq div {
+padding: 14px 0;
+border-top: 1px solid rgba(198, 160, 95, 0.18);
+}
+
+.faq div:first-child {
+border-top: none;
+padding-top: 0;
+}
+
+.faq dt {
+color: var(--paper);
+font-size: 0.95rem;
+margin-bottom: 6px;
+}
+
+.faq dd {
+margin: 0;
+color: var(--muted);
+font-size: 0.88rem;
+}
+
+.reviews-link {
+display: inline-flex;
+margin-top: 8px;
 }
 
 /* ================================
