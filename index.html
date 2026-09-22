@@ -25,20 +25,7 @@
   <div class="nav">
 
 <div class="brand">
-  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M20 4C13 10 9 16 9 22a11 11 0 0022 0c0-6-4-12-11-18z"
-      stroke="#c6a05f"
-      stroke-width="1.4"
-    />
-    <path
-      d="M20 14v14M15 22h10"
-      stroke="#a8402f"
-      stroke-width="1.4"
-      stroke-linecap="round"
-    />
-  </svg>
-
+  <img src="logo.jpg" alt="Urbano Tattoo" class="brand-logo">
   Urbano Tatto
 </div>
 
@@ -107,38 +94,7 @@
 
   <div class="hero-art">
 
-    <svg viewBox="0 0 420 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-      <circle
-        cx="210"
-        cy="240"
-        r="200"
-        fill="none"
-        stroke="#3a3327"
-        stroke-width="1"
-      />
-
-      <g
-        stroke="#c6a05f"
-        stroke-width="1.3"
-        fill="none"
-        stroke-linecap="round"
-      >
-        <path d="M210 90c-40 30-70 70-70 120 0 55 40 100 70 140 30-40 70-85 70-140 0-50-30-90-70-120z"/>
-        <path d="M210 130c-18 20-32 45-32 78 0 34 20 62 32 82 12-20 32-48 32-82 0-33-14-58-32-78z"/>
-        <path d="M180 150c-12 8-22 20-22 36M240 150c12 8 22 20 22 36"/>
-      </g>
-
-      <g stroke="#a8402f" stroke-width="1.1" fill="none">
-        <path d="M120 340c20 20 45 30 90 30s70-10 90-30"/>
-        <path d="M120 360c20 18 45 26 90 26s70-8 90-26"/>
-      </g>
-
-      <g stroke="#4a4233" stroke-width="0.8">
-        <path d="M60 60l20 20M340 60l-20 20M60 420l20-20M340 420l-20-20"/>
-      </g>
-
-    </svg>
+    <img src="logo.jpg" alt="Urbano Tattoo" class="hero-logo">
 
   </div>
 
@@ -452,9 +408,9 @@
 
   </section>
 
-  <!-- TESTIMONIOS -->
+  <!-- RESEÑAS DE GOOGLE -->
 
-  <section>
+  <section id="resenas">
 
 <div class="wrap">
 
@@ -462,48 +418,39 @@
 
     <h2>Lo que dicen</h2>
 
-    <p></p>
+    <p id="reviews-summary">Reseñas reales de nuestra ficha de Google.</p>
 
   </div>
 
-  <div class="testi">
+  <div class="testi" id="reviews-container">
 
     <blockquote>
-
-      <p>
-        Le mandé una foto por WhatsApp de lo que quería
-        y en el mismo día ya tenía precio y fecha.
-      </p>
-
+      <p>Le mandé una foto por WhatsApp de lo que quería y en el mismo día ya tenía precio y fecha.</p>
       <cite>— Valeria R.</cite>
-
     </blockquote>
 
-
     <blockquote>
-
-      <p>
-        El diseño final quedó mejor de lo que imaginé.
-        El artista sí entendió lo que le pedí.
-      </p>
-
+      <p>El diseño final quedó mejor de lo que imaginé. El artista sí entendió lo que le pedí.</p>
       <cite>— Diego M.</cite>
-
     </blockquote>
 
-
     <blockquote>
-
-      <p>
-        Era mi primer tatuaje y me explicaron todo el cuidado
-        posterior sin que preguntara.
-      </p>
-
+      <p>Era mi primer tatuaje y me explicaron todo el cuidado posterior sin que preguntara.</p>
       <cite>— Ana L.</cite>
-
     </blockquote>
 
   </div>
+
+  <div id="reviews-attribution"></div>
+
+  <a
+    class="btn-secondary reviews-link"
+    href="https://www.google.com/maps/place/Urbano+Tattoo/@19.4341696,-99.1619633,17z/data=!3m1!4b1!4m6!3m5!1s0x85d203dbf0240c71:0xe240a3ce3d217d49!8m2!3d19.4341646!4d-99.1593884!16s%2Fg%2F11w31hhk4n"
+    target="_blank"
+    rel="noopener"
+  >
+    Ver todas las reseñas en Google Maps →
+  </a>
 
 </div>
 
@@ -535,7 +482,7 @@
           <circle cx="12" cy="9" r="2.3"/>
         </svg>
 
-        <a href="https://www.google.com/maps/search/?api=1&query=Sadi+Carnot+97%2C+San+Rafael%2C+Cuauht%C3%A9moc%2C+06470+Ciudad+de+M%C3%A9xico%2C+CDMX" target="_blank" rel="noopener">Sadi Carnot 97, San Rafael, Cuauhtémoc, 06470 CDMX</a>
+        Estudio privado · CDMX
 
       </div>
 
@@ -547,18 +494,7 @@
           <path d="M12 7v5l3 3"/>
         </svg>
 
-        Martes a sábado, 12:00 – 20:00
-
-      </div>
-
-
-      <div class="info-line">
-
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
-          <path d="M3 6l9 6 9-6M4 5h16v14H4z"/>
-        </svg>
-
-        hola@tintanomada.mx
+        Lunes a Domingo, 08:00 – 20:00
 
       </div>
 
@@ -583,22 +519,34 @@
       <div class="contact-box">
 
         <h3>
-          ¿Prefieres que te contactemos?
+          Antes de tu cita
         </h3>
 
-        <p>
-          Esta sección puede convertirse en un formulario real
-          conectado a tu correo o CRM. Por ahora, el camino más
-          rápido sigue siendo WhatsApp — un mensaje directo,
-          sin formularios de por medio.
-        </p>
+        <dl class="faq">
+
+          <div>
+            <dt>¿Piden anticipo?</dt>
+            <dd>Sí, para apartar fecha y artista una vez confirmado el diseño.</dd>
+          </div>
+
+          <div>
+            <dt>¿Hay edad mínima?</dt>
+            <dd>18 años. Menores solo con un tutor presente y su autorización.</dd>
+          </div>
+
+          <div>
+            <dt>¿Qué material usan?</dt>
+            <dd>Todo el material de piel es desechable y de un solo uso.</dd>
+          </div>
+
+        </dl>
 
       </div>
 
       <div class="map">
         <iframe
-          src="https://www.google.com/maps?q=Sadi+Carnot+97%2C+San+Rafael%2C+Cuauht%C3%A9moc%2C+06470+Ciudad+de+M%C3%A9xico%2C+CDMX&output=embed"
-          title="Ubicación del estudio en Google Maps"
+          src="https://www.google.com/maps?q=Ciudad+de+M%C3%A9xico&z=11&output=embed"
+          title="Ciudad de México"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen
@@ -620,7 +568,7 @@
   <div class="wrap footer-row">
 
 <span>
-  Tinta Nómada · Estudio de tatuajes
+  Urbano Tatto · Estudio de tatuajes
 </span>
 
 <span>
@@ -628,7 +576,8 @@
 </span>
 
 <span>
-  El mejor estudio privado de tatuajes en la Ciudad de México. Agenda tu cita por WhatsApp.
+  Página de demostración — reemplaza textos, fotos y número
+  de WhatsApp antes de publicar.
 </span>
 
   </div>
@@ -650,6 +599,8 @@ aria-label="Escribir por WhatsApp"
   </svg>
 
 </a>
+
+<div id="places-service-node" style="display:none"></div>
 
 <script src="urba.js"></script>
 
