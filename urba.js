@@ -86,3 +86,90 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
     toggle?.setAttribute("aria-expanded", "false");
   });
 });
+
+/* ================================
+   RESEÑAS DE GOOGLE (automáticas)
+================================ */
+
+// 1) Ve a https://console.cloud.google.com/, crea un proyecto,
+//    activa "Places API" y genera una API key.
+// 2) Restringe la key por "referenciadores HTTP" a tu dominio
+//    (ej. urbanotattoo.mx/*) para que nadie más la use.
+// 3) Pega la key aquí abajo. Mientras diga "PON_AQUI_TU_API_KEY"
+//    la página seguirá mostrando las 3 reseñas de respaldo.
+const GOOGLE_MAPS_API_KEY = "PON_AQUI_TU_API_KEY";
+
+// Texto de búsqueda para encontrar el negocio correcto
+const GOOGLE_PLACE_QUERY = "Urbano Tattoo, Sadi Carnot 97, Ciudad de México";
+
+function loadGoogleReviews() {
+  if (!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY === "PON_AQUI_TU_API_KEY") {
+    // Sin key configurada: se quedan las reseñas de respaldo del HTML.
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src =
+    `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}` +
+    `&libraries=places&callback=initGoogleReviews`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
+// Google llama esta función en cuanto su script termina de cargar
+window.initGoogleReviews = function () {
+  const node = document.getElementById("places-service-node");
+  const service = new google.maps.places.PlacesService(node);
+
+  service.findPlaceFromQuery(
+    {
+      query: GOOGLE_PLACE_QUERY,
+      fields: ["place_id"],
+    },
+    (results, status) => {
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !results?.[0]) {
+        return; // se quedan las reseñas de respaldo
+      }
+
+      service.getDetails(
+        {
+          placeId: results[0].place_id,
+          fields: ["reviews", "rating", "user_ratings_total"],
+        },
+        (place, detailStatus) => {
+          if (detailStatus !== google.maps.places.PlacesServiceStatus.OK || !place) {
+            return;
+          }
+          renderGoogleReviews(place);
+        }
+      );
+    }
+  );
+};
+
+function renderGoogleReviews(place) {
+  const container = document.getElementById("reviews-container");
+  const summary = document.getElementById("reviews-summary");
+  if (!container) return;
+
+  if (Array.isArray(place.reviews) && place.reviews.length) {
+    container.innerHTML = place.reviews
+      .slice(0, 3)
+      .map(
+        (r) => `
+        <blockquote>
+          <p>${r.text}</p>
+          <cite>— ${r.author_name}</cite>
+        </blockquote>`
+      )
+      .join("");
+  }
+
+  if (summary && place.rating) {
+    const total = place.user_ratings_total ? ` (${place.user_ratings_total} reseñas)` : "";
+    summary.textContent = `${place.rating.toFixed(1)} ★ en Google${total}`;
+  }
+}
+
+loadGoogleReviews();
