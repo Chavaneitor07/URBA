@@ -112,6 +112,11 @@ transition: color 0.2s;
 color: var(--gold);
 }
 
+/* "Cotiza" dentro del menú: solo se muestra en celular */
+.nav-links a.nav-cta-mobile {
+display: none;
+}
+
 .nav-cta {
 display: inline-flex;
 align-items: center;
@@ -883,6 +888,18 @@ body { overflow-x: clip; }
     padding: 14px 0;
     font-size: 1.05rem;
     border-bottom: 1px solid rgba(198, 160, 95, 0.12);
+  }
+  .nav-links.mobile-menu a.nav-cta-mobile {
+    display: block;
+    margin-top: 14px;
+    padding: 13px 20px;
+    text-align: center;
+    color: var(--paper);
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--oxide), var(--oxide-deep));
+    border: 1px solid rgba(198, 160, 95, 0.45);
+    border-radius: 999px;
+    box-shadow: 0 4px 16px rgba(168, 64, 47, 0.35);
   }
 
   section { padding: 52px 0; }
