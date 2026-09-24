@@ -1,14 +1,15 @@
 :root {
---bg: #f6f4ef;
---bg-alt: #ecebe5;
---text: #131313;
---text-dim: #5c5a55;
---muted: #6b6862;
---line: rgba(19, 19, 19, 0.14);
---oxide: #8f2f2f;
---oxide-deep: #6f2020;
---on-accent: #f6f4ef;
---dark: #131313;
+--bg: #0B0B0B;
+--bg-alt: #151515;
+--card: #202020;
+--text: #F2F2F0;
+--text-dim: #A6A6A6;
+--muted: #777777;
+--line: rgba(242, 242, 240, 0.12);
+--oxide: #9A8060;
+--oxide-deep: #B39A78;
+--on-accent: #0B0B0B;
+--dark: #151515;
 --radius: 2px;
 }
 
@@ -62,7 +63,7 @@ header {
 position: sticky;
 top: 0;
 z-index: 40;
-background: rgba(246, 244, 239, 0.92);
+background: rgba(11, 11, 11, 0.92);
 backdrop-filter: blur(6px);
 border-bottom: 1px solid var(--line);
 }
@@ -79,10 +80,19 @@ margin: 0 auto;
 .brand {
 display: flex;
 align-items: center;
+gap: 10px;
 font-family: "Fraunces", serif;
 font-size: 1.3rem;
 letter-spacing: 0.14em;
 text-transform: uppercase;
+}
+
+.brand-logo {
+width: 36px;
+height: 36px;
+border-radius: 50%;
+object-fit: cover;
+flex-shrink: 0;
 }
 
 .nav-links {
@@ -93,12 +103,37 @@ color: var(--text-dim);
 }
 
 .nav-links a {
+position: relative;
 text-decoration: none;
+padding-bottom: 4px;
 transition: color 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links a::after {
+content: "";
+position: absolute;
+left: 0;
+right: 0;
+bottom: -2px;
+height: 2px;
+background: var(--oxide);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.25s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
 color: var(--oxide);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+transform: scaleX(1);
+}
+
+.nav-links a.nav-cta-mobile::after {
+content: none;
 }
 
 /* "Cotiza" dentro del menú: solo se muestra en celular */
@@ -118,7 +153,7 @@ border-radius: 999px;
 font-size: 0.9rem;
 font-weight: 500;
 border: 1px solid var(--oxide);
-box-shadow: 0 4px 16px rgba(143, 47, 47, 0.3);
+box-shadow: 0 4px 16px rgba(154, 128, 96, 0.3);
 transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
@@ -130,7 +165,7 @@ transition: transform 0.2s ease;
 
 .nav-cta:hover {
 background: linear-gradient(135deg, var(--oxide-deep), var(--oxide));
-box-shadow: 0 8px 22px rgba(143, 47, 47, 0.4);
+box-shadow: 0 8px 22px rgba(154, 128, 96, 0.4);
 transform: translateY(-2px);
 }
 
@@ -225,6 +260,21 @@ transition: opacity 0.45s ease, transform 0.45s ease;
 .hero-slider img.is-changing {
 opacity: 0;
 transform: scale(1.015);
+}
+
+.hero-slider img.hero-slider-logo {
+position: absolute;
+right: 14px;
+left: auto;
+bottom: 14px;
+width: 36px;
+height: 36px;
+border-radius: 50%;
+border: 2px solid var(--oxide);
+background: #fff;
+object-fit: cover;
+box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+z-index: 2;
 }
 
 .hero-slider-dots {
@@ -436,7 +486,7 @@ align-items: flex-end;
 padding: 16px;
 margin: 0;
 font-size: 0.82rem;
-color: #dcdad3;
+color: var(--text-dim);
 }
 
 .grid-portfolio > div::before {
@@ -472,7 +522,7 @@ pointer-events: none;
 position: relative;
 z-index: 1;
 font-size: 0.82rem;
-color: #f2f0ea;
+color: var(--text);
 }
 
 /* Oculta las tarjetas que no coinciden con el filtro activo */
@@ -596,7 +646,7 @@ color: var(--on-accent);
 }
 
 .quick-preview {
-border: 1px dashed rgba(19, 19, 19, 0.3);
+border: 1px dashed rgba(242, 242, 240, 0.25);
 padding: 18px;
 font-size: 0.9rem;
 color: var(--text-dim);
@@ -732,7 +782,7 @@ FOOTER
 footer {
 background: var(--dark);
 padding: 32px 0;
-color: #b9b7b0;
+color: var(--muted);
 font-size: 0.85rem;
 }
 
@@ -741,6 +791,22 @@ display: flex;
 justify-content: space-between;
 flex-wrap: wrap;
 gap: 10px;
+}
+
+.footer-row > span:first-child {
+color: var(--text);
+font-family: "Fraunces", serif;
+letter-spacing: 0.04em;
+}
+
+.footer-row a {
+color: var(--muted);
+text-decoration: none;
+transition: color 0.2s;
+}
+
+.footer-row a:hover {
+color: var(--oxide);
 }
 
 /* ================================
@@ -885,7 +951,7 @@ body { overflow-x: clip; }
     background: linear-gradient(135deg, var(--oxide), var(--oxide-deep));
     border: 1px solid var(--oxide);
     border-radius: 999px;
-    box-shadow: 0 4px 16px rgba(143, 47, 47, 0.3);
+    box-shadow: 0 4px 16px rgba(154, 128, 96, 0.3);
   }
 
   section { padding: 52px 0; }
@@ -899,6 +965,8 @@ body { overflow-x: clip; }
   .hero-gallery { max-width: 420px; margin: 0 auto; }
   .hero-slider { height: 300px; }
   .hero-logo { width: 230px; margin: 0 auto 18px; }
+  .hero-slider img.hero-slider-logo { width: 30px; height: 30px; right: 10px; left: auto; bottom: 10px; }
+  .brand-logo { width: 30px; height: 30px; }
 
   .section-head { margin-bottom: 28px; }
   .section-head p { max-width: none; }
