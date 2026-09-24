@@ -12,7 +12,7 @@ document.querySelectorAll('a[href*="wa.me/"]').forEach((a) => {
    SELECCIONES (chips)
 ================================ */
 
-const selections = { estilo: null, zona: null, tamano: null };
+const selections = { estilo: null, zona: null, tamano: null, diseño: null };
 
 const preview = document.getElementById("preview");
 const sendBtn = document.getElementById("quick-send");
@@ -44,25 +44,64 @@ document.querySelectorAll(".chips").forEach((group) => {
    VISTA PREVIA Y ENLACE DE WHATSAPP
 ================================ */
 
+// Convierte "Línea fina" -> "línea fina" (solo la primera letra)
+function lowerFirst(str) {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+// Arma "en el brazo", "en la pierna", etc. según la zona elegida
+function zonaPhrase(zona) {
+  const map = {
+    "Brazo": "en el brazo",
+    "Pierna": "en la pierna",
+    "Espalda": "en la espalda",
+    "Mano": "en la mano",
+    "Otra": "en otra zona",
+  };
+  return map[zona] || `en ${lowerFirst(zona)}`;
+}
+
+// Segunda línea del mensaje según si ya tiene diseño o no
+function diseñoLine(valor) {
+  switch (valor) {
+    case "Sí, tengo referencia":
+      return "Tengo una referencia del diseño y me gustaría conocer el proceso y recibir información para cotizarlo.";
+    case "Tengo una idea":
+      return "Tengo una idea del diseño y me gustaría conocer el proceso y recibir información para cotizarlo.";
+    case "Quiero asesoría":
+      return "Me gustaría recibir asesoría sobre el diseño, conocer el proceso y recibir información para cotizarlo.";
+    default:
+      return "Me gustaría conocer el proceso y recibir información para cotizarlo.";
+  }
+}
+
 function updatePreview() {
-  const parts = [];
+  const bits = [];
+  if (selections.estilo) bits.push(lowerFirst(selections.estilo));
+  if (selections.tamano) bits.push(lowerFirst(selections.tamano));
+  if (selections.zona) bits.push(zonaPhrase(selections.zona));
 
-  if (selections.estilo) parts.push(`estilo <b>${selections.estilo}</b>`);
-  if (selections.zona) parts.push(`en <b>${selections.zona}</b>`);
-  if (selections.tamano) parts.push(`tamaño <b>${selections.tamano}</b>`);
+  const hasAny = bits.length > 0 || selections["diseño"];
 
-  if (parts.length === 0) {
-    preview.textContent = "Selecciona estilo, zona y tamaño para armar tu mensaje.";
-  } else {
-    preview.innerHTML = `Hola, quiero un tatuaje ${parts.join(", ")}. ¿Me pueden dar información?`;
+  if (!hasAny) {
+    preview.textContent = "Selecciona estilo, zona, tamaño y diseño para armar tu mensaje.";
+    sendBtn.href = `https://wa.me/${WHATSAPP_NUMBER}`;
+    return;
   }
 
-  const message =
-    "Hola, quiero un tatuaje" +
-    (selections.estilo ? " estilo " + selections.estilo : "") +
-    (selections.zona ? " en " + selections.zona : "") +
-    (selections.tamano ? " tamaño " + selections.tamano : "") +
-    ". ¿Me pueden dar información?";
+  const firstLinePlain = bits.length
+    ? `Hola, TinTempo. Me interesa realizar un tatuaje de ${bits.join(", ")}.`
+    : "Hola, TinTempo. Me interesa realizar un tatuaje.";
+
+  const firstLineHTML = bits.length
+    ? `Hola, TinTempo. Me interesa realizar un tatuaje de ${bits.map((b) => `<b>${b}</b>`).join(", ")}.`
+    : "Hola, TinTempo. Me interesa realizar un tatuaje.";
+
+  const secondLine = diseñoLine(selections["diseño"]);
+
+  preview.innerHTML = `${firstLineHTML}<br>${secondLine}<br>¡Gracias!`;
+
+  const message = `${firstLinePlain}\n${secondLine}\n¡Gracias!`;
 
   sendBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
