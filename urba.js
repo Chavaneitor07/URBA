@@ -139,6 +139,32 @@ if (heroImg && heroDots.length) {
 }
 
 /* ================================
+   MENÚ: RESALTAR SECCIÓN ACTIVA
+================================ */
+
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+const navSections = [...navLinks]
+  .map((link) => document.querySelector(link.getAttribute("href")))
+  .filter(Boolean);
+
+if (navSections.length) {
+  const spyObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = `#${entry.target.id}`;
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === id);
+        });
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+  );
+
+  navSections.forEach((section) => spyObserver.observe(section));
+}
+
+/* ================================
    MENÚ MÓVIL
 ================================ */
 
