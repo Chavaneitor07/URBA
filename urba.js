@@ -227,22 +227,24 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
    CARRUSEL DE RESEÑAS
 ================================ */
 
-const TESTI_PER_PAGE = 3;
+// En escritorio se ven 3 reseñas a la vez; en celular, una por vez
+// (así la página no se estira y se desliza con el dedo o con las flechas).
+const testiMobile = window.matchMedia("(max-width: 760px)");
+let testiApi = null;
 
 function initTestiSlider() {
   const container = document.getElementById("reviews-container");
   const dotsWrap = document.getElementById("testi-dots");
-  const prevBtn = document.querySelector(".testi-prev");
-  const nextBtn = document.querySelector(".testi-next");
   if (!container || !dotsWrap) return;
 
   const slides = [...container.querySelectorAll("blockquote")];
   if (!slides.length) return;
 
-  const pageCount = Math.ceil(slides.length / TESTI_PER_PAGE);
+  const perPage = testiMobile.matches ? 1 : 3;
+  const pageCount = Math.ceil(slides.length / perPage);
   let page = 0;
 
-  // Genera un punto por cada página de 3 reseñas (no por reseña individual)
+  // Un punto por cada página
   dotsWrap.innerHTML = Array.from({ length: pageCount })
     .map((_, i) => `<button aria-label="Ver reseñas, página ${i + 1}"></button>`)
     .join("");
@@ -250,18 +252,47 @@ function initTestiSlider() {
 
   function show(newPage) {
     page = (newPage + pageCount) % pageCount;
-    const start = page * TESTI_PER_PAGE;
-    const end = start + TESTI_PER_PAGE;
+    const start = page * perPage;
+    const end = start + perPage;
     slides.forEach((s, i) => s.classList.toggle("active", i >= start && i < end));
     dots.forEach((d, i) => d.classList.toggle("active", i === page));
   }
 
-  prevBtn?.addEventListener("click", () => show(page - 1));
-  nextBtn?.addEventListener("click", () => show(page + 1));
   dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
+
+  // Los botones y el deslizado usan siempre la versión más reciente
+  testiApi = { step: (dir) => show(page + dir) };
 
   show(0);
 }
+
+// Flechas y deslizar con el dedo: se enlazan una sola vez
+document.querySelector(".testi-prev")?.addEventListener("click", () => testiApi?.step(-1));
+document.querySelector(".testi-next")?.addEventListener("click", () => testiApi?.step(1));
+
+(function bindTestiSwipe() {
+  const track = document.querySelector(".testi-track");
+  if (!track) return;
+  let startX = null;
+  let startY = null;
+  track.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  track.addEventListener("touchend", (e) => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    // Solo si el gesto fue claramente horizontal (no al hacer scroll)
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      testiApi?.step(dx < 0 ? 1 : -1);
+    }
+    startX = startY = null;
+  });
+})();
+
+// Si giran el celular o cambia el tamaño de ventana, se reacomoda
+testiMobile.addEventListener("change", initTestiSlider);
 
 initTestiSlider();
 
