@@ -1315,3 +1315,32 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .portfolio-item img { transform: none !important; }
 }
+
+/* ================================
+   RESEÑAS EN CELULAR: una por vez, flechas debajo
+================================ */
+
+@media (max-width: 760px) {
+  .testi-slider {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .testi-track {
+    flex: 0 0 100%;
+    order: 0;
+  }
+
+  .testi-prev { order: 1; }
+  .testi-next { order: 2; }
+
+  .testi-arrow { width: 40px; height: 40px; }
+
+  .testi-dots { margin-top: 14px; }
+
+  .testi blockquote { padding-top: 16px; }
+
+  .testi-photo { height: 200px; }
+  .testi-photos .testi-photo { height: 150px; }
+}
