@@ -224,6 +224,48 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
 });
 
 /* ================================
+   CARRUSEL DE RESEÑAS
+================================ */
+
+const TESTI_PER_PAGE = 3;
+
+function initTestiSlider() {
+  const container = document.getElementById("reviews-container");
+  const dotsWrap = document.getElementById("testi-dots");
+  const prevBtn = document.querySelector(".testi-prev");
+  const nextBtn = document.querySelector(".testi-next");
+  if (!container || !dotsWrap) return;
+
+  const slides = [...container.querySelectorAll("blockquote")];
+  if (!slides.length) return;
+
+  const pageCount = Math.ceil(slides.length / TESTI_PER_PAGE);
+  let page = 0;
+
+  // Genera un punto por cada página de 3 reseñas (no por reseña individual)
+  dotsWrap.innerHTML = Array.from({ length: pageCount })
+    .map((_, i) => `<button aria-label="Ver reseñas, página ${i + 1}"></button>`)
+    .join("");
+  const dots = [...dotsWrap.querySelectorAll("button")];
+
+  function show(newPage) {
+    page = (newPage + pageCount) % pageCount;
+    const start = page * TESTI_PER_PAGE;
+    const end = start + TESTI_PER_PAGE;
+    slides.forEach((s, i) => s.classList.toggle("active", i >= start && i < end));
+    dots.forEach((d, i) => d.classList.toggle("active", i === page));
+  }
+
+  prevBtn?.addEventListener("click", () => show(page - 1));
+  nextBtn?.addEventListener("click", () => show(page + 1));
+  dots.forEach((dot, i) => dot.addEventListener("click", () => show(i)));
+
+  show(0);
+}
+
+initTestiSlider();
+
+/* ================================
    RESEÑAS DE GOOGLE (automáticas)
 ================================ */
 
@@ -291,16 +333,21 @@ function renderGoogleReviews(place) {
 
   if (Array.isArray(place.reviews) && place.reviews.length) {
     container.innerHTML = place.reviews
-      .slice(0, 3)
-      .map(
-        (r) => `
+      .slice(0, 5)
+      .map((r) => {
+        const stars = "★".repeat(r.rating || 5) + "☆".repeat(5 - (r.rating || 5));
+        return `
         <blockquote>
+          <span class="testi-stars">${stars}</span>
           <p>${r.text}</p>
           <cite>— ${r.author_name}</cite>
-        </blockquote>`
-      )
+        </blockquote>`;
+      })
       .join("");
+    initTestiSlider();
   }
+
+  setRatingBadge(place.rating, place.user_ratings_total);
 
   if (summary && place.rating) {
     const total = place.user_ratings_total ? ` (${place.user_ratings_total} reseñas)` : "";
@@ -309,3 +356,129 @@ function renderGoogleReviews(place) {
 }
 
 loadGoogleReviews();
+
+/* ================================
+   BADGE DE CALIFICACIÓN (hero)
+================================ */
+
+// Solo se muestra con datos REALES. Dos formas de activarlo:
+// 1) Automática: cuando configures GOOGLE_MAPS_API_KEY, se llena sola.
+// 2) Manual: escribe aquí tu calificación y total de reseñas tal como
+//    aparecen hoy en Google Maps (ej. { rating: 4.9, total: 25 }).
+//    Actualízalo de vez en cuando. Con null, el badge queda oculto.
+const GOOGLE_RATING_MANUAL = { rating: null, total: null };
+
+function setRatingBadge(rating, total) {
+  const badge = document.getElementById("rating-badge");
+  const text = document.getElementById("rating-badge-text");
+  if (!badge || !text || !rating) return;
+
+  const count = total ? ` (${total} reseñas)` : "";
+  text.textContent = `${Number(rating).toFixed(1)} en Google${count}`;
+  badge.hidden = false;
+}
+
+setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
+
+/* ================================
+   PORTAFOLIO: "VER DETALLE" + LIGHTBOX
+================================ */
+
+(function initPortfolioLightbox() {
+  const items = [...document.querySelectorAll("#portfolio-grid figure.portfolio-item")];
+  if (!items.length) return;
+
+  // Etiqueta "Ver detalle" y accesibilidad en cada foto real
+  items.forEach((item) => {
+    item.dataset.zoomable = "";
+    item.tabIndex = 0;
+    item.setAttribute("role", "button");
+    item.setAttribute("aria-label", "Ver foto en grande");
+    const tag = document.createElement("span");
+    tag.className = "portfolio-zoom";
+    tag.textContent = "Ver detalle";
+    item.appendChild(tag);
+  });
+
+  const box = document.createElement("div");
+  box.className = "lightbox";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-label", "Foto del portafolio");
+  box.innerHTML = `
+    <button class="lightbox-close" aria-label="Cerrar">✕</button>
+    <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
+    <figure><img alt=""><figcaption></figcaption></figure>
+    <button class="lightbox-next" aria-label="Foto siguiente">›</button>`;
+  document.body.appendChild(box);
+
+  const img = box.querySelector("img");
+  const caption = box.querySelector("figcaption");
+  let current = 0;
+  let lastFocus = null;
+
+  // Solo navega entre las fotos visibles con el filtro activo
+  const visible = () => items.filter((i) => !i.classList.contains("is-hidden"));
+
+  function show(item) {
+    const src = item.querySelector("img");
+    img.src = src.currentSrc || src.src;
+    img.alt = src.alt;
+    caption.textContent = item.querySelector("figcaption")?.textContent || "";
+    current = visible().indexOf(item);
+  }
+
+  function step(dir) {
+    const list = visible();
+    if (list.length < 2) return;
+    show(list[(current + dir + list.length) % list.length]);
+  }
+
+  function open(item) {
+    lastFocus = document.activeElement;
+    show(item);
+    box.classList.add("open");
+    document.body.style.overflow = "hidden";
+    box.querySelector(".lightbox-close").focus();
+  }
+
+  function close() {
+    box.classList.remove("open");
+    document.body.style.overflow = "";
+    lastFocus?.focus();
+  }
+
+  items.forEach((item) => {
+    item.addEventListener("click", () => open(item));
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open(item);
+      }
+    });
+  });
+
+  box.querySelector(".lightbox-close").addEventListener("click", close);
+  box.querySelector(".lightbox-prev").addEventListener("click", () => step(-1));
+  box.querySelector(".lightbox-next").addEventListener("click", () => step(1));
+  box.addEventListener("click", (e) => {
+    if (e.target === box) close();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (!box.classList.contains("open")) return;
+    if (e.key === "Escape") close();
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+
+  // Deslizar con el dedo para cambiar de foto
+  let startX = null;
+  box.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener("touchend", (e) => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+    startX = null;
+  });
+})();
