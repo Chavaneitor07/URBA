@@ -350,7 +350,25 @@ border-radius: 20px;
 .hero-slider > img:first-child { user-select: none; -webkit-user-drag: none; }
 
 @media (max-width: 760px) {
-  .hero-slider-arrow { width: 25%; }
+  .hero-slider button.hero-slider-arrow {
+    top: 0;
+    width: 25%;
+    height: 100%;
+    padding: 0;
+    transform: none;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: transparent;
+    font-size: 0;
+    box-shadow: none;
+  }
+  .hero-slider button.hero-slider-arrow:hover,
+  .hero-slider button.hero-slider-arrow:active {
+    background: transparent;
+    color: transparent;
+    box-shadow: none;
+  }
 }
 
 
