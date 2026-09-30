@@ -119,13 +119,26 @@ portfolioFilters?.querySelectorAll(".chip").forEach((btn) => {
     btn.classList.add("active");
 
     const filter = btn.dataset.filter;
+    const shownByCategory = {};
 
     portfolioItems.forEach((item) => {
-      const match = filter === "todos" || item.dataset.category === filter;
-      item.classList.toggle("is-hidden", !match);
+      const category = item.dataset.category;
+      let show = filter === "todos" || category === filter;
+
+      // En "Todos" deja una muestra de hasta tres trabajos por estilo.
+      // Al elegir un estilo se muestran todas sus fotos.
+      if (filter === "todos") {
+        shownByCategory[category] = (shownByCategory[category] || 0) + 1;
+        show = shownByCategory[category] <= 3;
+      }
+
+      item.classList.toggle("is-hidden", !show);
     });
   });
 });
+
+// Aplica también la vista inicial sin esperar a que el usuario toque un filtro.
+portfolioFilters?.querySelector('[data-filter="todos"]')?.click();
 
 /* ================================
    FOTOS DEL INICIO (rotan solas cada 3s)
