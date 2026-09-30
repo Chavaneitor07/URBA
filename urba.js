@@ -141,11 +141,15 @@ portfolioFilters?.querySelectorAll(".chip").forEach((btn) => {
 portfolioFilters?.querySelector('[data-filter="todos"]')?.click();
 
 /* ================================
-   FOTOS DEL INICIO (rotan solas cada 3s)
+   FOTOS DEL INICIO (rotan solas cada 6s y se pueden cambiar manualmente)
 ================================ */
 
 const heroImg = document.getElementById("hero-img");
 const heroDots = document.querySelectorAll("#hero-dots button");
+const heroSlider = document.querySelector(".hero-slider");
+const heroPrev = document.getElementById("hero-prev");
+const heroNext = document.getElementById("hero-next");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let heroIndex = 0;
 let heroTimer = null;
 
@@ -161,30 +165,61 @@ function showHeroPhoto(index) {
 
   heroImg.classList.add("is-changing");
 
-  setTimeout(() => {
+  const finishChange = () => {
     heroImg.src = dot.dataset.src;
     heroImg.alt = dot.dataset.alt || heroImg.alt;
     heroImg.classList.remove("is-changing");
-  }, 450);
+  };
+
+  if (prefersReducedMotion.matches) finishChange();
+  else setTimeout(finishChange, 450);
 
   heroDots.forEach((d) => d.classList.remove("active"));
   dot.classList.add("active");
+  heroDots.forEach((d) => d.setAttribute("aria-current", String(d === dot)));
 }
 
 function startHeroRotation() {
+  if (prefersReducedMotion.matches || heroDots.length < 2) return;
   heroTimer = setInterval(() => {
     const next = (heroIndex + 1) % heroDots.length;
     showHeroPhoto(next);
-  }, 3000);
+  }, 6000);
+}
+
+function resetHeroRotation() {
+  clearInterval(heroTimer);
+  startHeroRotation();
+}
+
+function stepHeroPhoto(direction) {
+  const next = (heroIndex + direction + heroDots.length) % heroDots.length;
+  showHeroPhoto(next);
+  resetHeroRotation();
 }
 
 heroDots.forEach((dot, index) => {
   dot.addEventListener("click", () => {
-    clearInterval(heroTimer);
     showHeroPhoto(index);
-    startHeroRotation();
+    resetHeroRotation();
   });
 });
+
+heroPrev?.addEventListener("click", () => stepHeroPhoto(-1));
+heroNext?.addEventListener("click", () => stepHeroPhoto(1));
+
+// En celular también se puede deslizar la foto hacia un lado.
+let heroTouchStartX = null;
+heroSlider?.addEventListener("touchstart", (event) => {
+  heroTouchStartX = event.changedTouches[0].screenX;
+}, { passive: true });
+
+heroSlider?.addEventListener("touchend", (event) => {
+  if (heroTouchStartX === null) return;
+  const deltaX = event.changedTouches[0].screenX - heroTouchStartX;
+  if (Math.abs(deltaX) > 45) stepHeroPhoto(deltaX < 0 ? 1 : -1);
+  heroTouchStartX = null;
+}, { passive: true });
 
 if (heroImg && heroDots.length) {
   startHeroRotation();
