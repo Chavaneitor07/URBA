@@ -257,6 +257,31 @@ if (navSections.length) {
 
 const toggle = document.querySelector(".nav-toggle");
 const links = document.querySelector(".nav-links");
+const header = document.querySelector("header");
+
+// Oculta la barra al desplazarse hacia abajo y la recupera al subir.
+let previousScrollY = window.scrollY;
+let scrollTicking = false;
+
+window.addEventListener("scroll", () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+
+  window.requestAnimationFrame(() => {
+    const currentScrollY = window.scrollY;
+    const difference = currentScrollY - previousScrollY;
+    const mobileMenuOpen = links?.classList.contains("mobile-menu");
+
+    if (currentScrollY < 80 || mobileMenuOpen || difference < -6) {
+      header?.classList.remove("nav-hidden");
+    } else if (difference > 6) {
+      header?.classList.add("nav-hidden");
+    }
+
+    previousScrollY = currentScrollY;
+    scrollTicking = false;
+  });
+}, { passive: true });
 
 toggle?.addEventListener("click", () => {
   const open = links.classList.toggle("mobile-menu");
