@@ -93,13 +93,22 @@ function updatePreview() {
     ? `Hola, TinTempo. Me interesa realizar un tatuaje de ${bits.join(", ")}.`
     : "Hola, TinTempo. Me interesa realizar un tatuaje.";
 
-  const firstLineHTML = bits.length
-    ? `Hola, TinTempo. Me interesa realizar un tatuaje de ${bits.map((b) => `<b>${b}</b>`).join(", ")}.`
-    : "Hola, TinTempo. Me interesa realizar un tatuaje.";
-
   const secondLine = diseñoLine(selections["diseño"]);
 
-  preview.innerHTML = `${firstLineHTML}<br>${secondLine}<br>¡Gracias!`;
+  preview.replaceChildren();
+  if (bits.length) {
+    preview.append("Hola, TinTempo. Me interesa realizar un tatuaje de ");
+    bits.forEach((bit, index) => {
+      if (index) preview.append(", ");
+      const bold = document.createElement("b");
+      bold.textContent = bit;
+      preview.append(bold);
+    });
+    preview.append(".");
+  } else {
+    preview.append("Hola, TinTempo. Me interesa realizar un tatuaje.");
+  }
+  preview.append(document.createElement("br"), secondLine, document.createElement("br"), "¡Gracias!");
 
   const message = `${firstLinePlain}\n${secondLine}\n¡Gracias!`;
 
@@ -283,16 +292,21 @@ window.addEventListener("scroll", () => {
   });
 }, { passive: true });
 
+function setMobileMenu(open) {
+  links?.classList.toggle("mobile-menu", open);
+  toggle?.setAttribute("aria-expanded", String(open));
+  toggle?.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
+  if (toggle) toggle.textContent = open ? "×" : "☰";
+}
+
 toggle?.addEventListener("click", () => {
-  const open = links.classList.toggle("mobile-menu");
-  toggle.setAttribute("aria-expanded", String(open));
+  setMobileMenu(!links?.classList.contains("mobile-menu"));
 });
 
 // Cerrar el menú al elegir una opción
 document.querySelectorAll(".nav-links a").forEach((link) => {
   link.addEventListener("click", () => {
-    links.classList.remove("mobile-menu");
-    toggle?.setAttribute("aria-expanded", "false");
+    setMobileMenu(false);
   });
 });
 
@@ -436,18 +450,25 @@ function renderGoogleReviews(place) {
   if (!container) return;
 
   if (Array.isArray(place.reviews) && place.reviews.length) {
-    container.innerHTML = place.reviews
-      .slice(0, 5)
-      .map((r) => {
-        const stars = "★".repeat(r.rating || 5) + "☆".repeat(5 - (r.rating || 5));
-        return `
-        <blockquote>
-          <span class="testi-stars">${stars}</span>
-          <p>${r.text}</p>
-          <cite>— ${r.author_name}</cite>
-        </blockquote>`;
-      })
-      .join("");
+    const reviews = document.createDocumentFragment();
+    place.reviews.slice(0, 5).forEach((review) => {
+      const rating = Number(review.rating);
+      const starCount = Number.isFinite(rating) ? Math.max(0, Math.min(5, Math.round(rating))) : 5;
+      const card = document.createElement("blockquote");
+      const stars = document.createElement("span");
+      stars.className = "testi-stars";
+      stars.textContent = "★".repeat(starCount) + "☆".repeat(5 - starCount);
+
+      const text = document.createElement("p");
+      text.textContent = review.text || "";
+
+      const author = document.createElement("cite");
+      author.textContent = `— ${review.author_name || "Cliente de Google"}`;
+
+      card.append(stars, text, author);
+      reviews.append(card);
+    });
+    container.replaceChildren(reviews);
     initTestiSlider();
   }
 
