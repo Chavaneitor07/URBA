@@ -1489,7 +1489,7 @@ body::before {
   max-height: 78vh;
   margin: 0 auto;
   object-fit: contain;
-  cursor: ew-resize;
+  cursor: pointer;
   touch-action: pan-y;
 }
 
