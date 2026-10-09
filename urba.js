@@ -575,6 +575,7 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
   const caption = lightboxCaption;
   let current = 0;
   let lastFocus = null;
+  let suppressClick = false;
 
   // Solo navega entre las fotos visibles con el filtro activo
   const visible = () => items.filter((i) => !i.classList.contains("is-hidden"));
@@ -621,7 +622,22 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
   previousButton.addEventListener("click", () => step(-1));
   nextButton.addEventListener("click", () => step(1));
   box.addEventListener("click", (e) => {
-    if (e.target === box) close();
+    // También se puede cambiar de foto haciendo clic en el lado deseado.
+    // En la imagen usamos su propio centro; en el espacio alrededor, el del visor.
+    if (suppressClick) {
+      suppressClick = false;
+      return;
+    }
+    if (e.target.closest("button")) return;
+    if (e.target === box) {
+      close();
+      return;
+    }
+
+    if (!figure.contains(e.target)) return;
+    const bounds = figure.getBoundingClientRect();
+    const midpoint = bounds.left + bounds.width / 2;
+    step(e.clientX < midpoint ? -1 : 1);
   });
 
   document.addEventListener("keydown", (e) => {
@@ -631,13 +647,23 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
     if (e.key === "ArrowRight") step(1);
   });
 
-  // Deslizar con el dedo para cambiar de foto
+  // Deslizar horizontalmente cambia la foto; un movimiento vertical no lo hace.
   let startX = null;
-  box.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  let startY = null;
+  box.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
   box.addEventListener("touchend", (e) => {
-    if (startX === null) return;
+    if (startX === null || startY === null) return;
     const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
-    startX = null;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      step(dx < 0 ? 1 : -1);
+      // Evita que el toque que termina el gesto también active el clic lateral.
+      suppressClick = true;
+      window.setTimeout(() => { suppressClick = false; }, 400);
+    }
+    startX = startY = null;
   });
 })();
