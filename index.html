@@ -57,18 +57,11 @@
   <a href="#tatuador">Artistas</a>
   <a href="#antes-tatuar">Proceso</a>
   <a href="#contacto">Contacto</a>
-  <a class="nav-cta-mobile" href="#quick">
-    <span>Cotiza tu tatuaje</span>
-    <span class="nav-cta-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 12h14M13 6l6 6-6 6"/>
-      </svg>
-    </span>
-  </a>
 </nav>
 
-<a class="nav-cta" href="#quick">
-  <span>Cotiza tu tatuaje</span>
+<a class="nav-cta" href="#quick" aria-label="Cotiza tu tatuaje">
+  <span class="nav-cta-full">Cotiza tu tatuaje</span>
+  <span class="nav-cta-short">Cotiza</span>
   <span class="nav-cta-icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M5 12h14M13 6l6 6-6 6"/>
@@ -94,6 +87,11 @@
     <span class="eyebrow">
       Estudio de tatuajes · Ciudad de México
     </span>
+
+    <svg class="hero-ink-stroke" viewBox="0 0 360 30" aria-hidden="true" focusable="false">
+      <path d="M2 20 C42 18, 66 11, 102 14 S158 24, 194 16 S248 7, 285 13 S330 19, 358 8" />
+      <circle cx="358" cy="8" r="2" />
+    </svg>
 
     <h1>
       Un estudio privado,<br>
@@ -136,7 +134,7 @@
   <div class="hero-gallery">
 
     <div class="hero-slider">
-      <img src="FOTOS/STUDIO_2.jpeg" alt="Interior del estudio TinTempo" id="hero-img">
+      <img src="FOTOS/STUDIO_2.jpeg" alt="Interior del estudio TinTempo" id="hero-img" fetchpriority="high" decoding="async">
       <img src="FOTOS/LOGO.jpeg" alt="TinTempo" class="hero-slider-logo">
       <button class="hero-slider-arrow hero-slider-prev" id="hero-prev" type="button" aria-label="Foto anterior">‹</button>
       <button class="hero-slider-arrow hero-slider-next" id="hero-next" type="button" aria-label="Siguiente foto">›</button>
@@ -386,7 +384,7 @@
     <div class="wrap">
       <div class="advisory tattoo-artist">
         <div class="advisory-photo">
-          <img src="FOTOS/TATUADOR.jpeg" alt="Tatuador de TinTempo trabajando">
+          <img src="FOTOS/TATUADOR.jpeg" alt="Tatuador de TinTempo trabajando" loading="lazy" decoding="async">
         </div>
 
         <div class="advisory-copy">
@@ -535,7 +533,7 @@
       <a
         class="btn-primary"
         id="quick-send"
-        href="https://wa.me/525500000000"
+        href="https://wa.me/525525199535"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -605,8 +603,8 @@
       <span class="testi-stars">★★★★★</span>
       <p>Excelente servicio y muy buena atención.</p>
       <div class="testi-photos">
-        <img class="testi-photo" src="RESEÑAS/RESEÑA 1.jpg" alt="Tatuaje de un ojo en el cuello, reseña de Geovani Lopez">
-        <img class="testi-photo" src="RESEÑAS/RESEÑA 1.1.jpg" alt="Tatuaje de un joker en la espalda, reseña de Geovani Lopez">
+        <img class="testi-photo" src="RESEÑAS/RESEÑA 1.jpg" alt="Tatuaje de un ojo en el cuello, reseña de Geovani Lopez" loading="lazy" decoding="async">
+        <img class="testi-photo" src="RESEÑAS/RESEÑA 1.1.jpg" alt="Tatuaje de un joker en la espalda, reseña de Geovani Lopez" loading="lazy" decoding="async">
       </div>
       <cite>— Geovani Lopez</cite>
     </blockquote>
@@ -614,7 +612,7 @@
     <blockquote>
       <span class="testi-stars">★★★★★</span>
       <p>Súper recomendable. Mi primer tatuaje y todo perfecto. El chico Argén súper bueno, hizo el proceso muy ameno, no tengo duda que todos los que trabajan aquí sean súper talentosos. De verdad recomiendo al 1000, los visitaré nuevamente.</p>
-      <img class="testi-photo" src="RESEÑAS/RESEÑA 2.jpg" alt="Tatuaje de dos aves en el brazo, reseña de Geovani Lopez">
+      <img class="testi-photo" src="RESEÑAS/RESEÑA 2.jpg" alt="Tatuaje de dos aves en el brazo, reseña de Geovani Lopez" loading="lazy" decoding="async">
       <cite>— Geovani Lopez</cite>
     </blockquote>
 
@@ -622,8 +620,8 @@
       <span class="testi-stars">★★★★★</span>
       <p>Todos mis tatuajes los he hecho en este lugar ¡Y los que siguen! También les he dado a conocer el estudio a camaradas. Me siento cómodo y contento con los diseños y el lugar, son muy amables, inclusive te ayudan y te dan recomendaciones de acuerdo a tus gustos.</p>
       <div class="testi-photos">
-        <img class="testi-photo" src="RESEÑAS/RESEÑA 3.jpg" alt="Tatuaje de un dragón en el antebrazo, reseña de Adrián Arenas García">
-        <img class="testi-photo" src="RESEÑAS/RESEÑA 3.1.jpg" alt="Tatuaje tribal en el antebrazo, reseña de Adrián Arenas García">
+        <img class="testi-photo" src="RESEÑAS/RESEÑA 3.jpg" alt="Tatuaje de un dragón en el antebrazo, reseña de Adrián Arenas García" loading="lazy" decoding="async">
+        <img class="testi-photo" src="RESEÑAS/RESEÑA 3.1.jpg" alt="Tatuaje tribal en el antebrazo, reseña de Adrián Arenas García" loading="lazy" decoding="async">
       </div>
       <cite>— Adrián Arenas García</cite>
     </blockquote>
@@ -772,7 +770,7 @@
 
 <a
 class="wa-float"
-href="https://wa.me/525500000000?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20un%20tatuaje"
+href="https://wa.me/525525199535?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20un%20tatuaje"
 target="_blank"
 rel="noopener noreferrer"
 aria-label="Escribir por WhatsApp"
