@@ -2,6 +2,7 @@
 
 // Número de WhatsApp con lada de país (52 = México), sin +, espacios ni guiones.
 const WHATSAPP_NUMBER = "525525199535";
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 // Todos los botones de WhatsApp de la página usan este mismo número
 document.querySelectorAll('a[href*="wa.me/"]').forEach((a) => {
@@ -122,6 +123,24 @@ function updatePreview() {
 const portfolioFilters = document.getElementById("portfolio-filters");
 const portfolioItems = document.querySelectorAll("#portfolio-grid .portfolio-item");
 
+// Aparición discreta de las piezas al entrar en pantalla. Si el navegador no
+// admite IntersectionObserver, las fotos quedan visibles desde el inicio.
+if ("IntersectionObserver" in window && !prefersReducedMotion.matches) {
+  const portfolioRevealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-revealed");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -36px 0px" });
+
+  portfolioItems.forEach((item, index) => {
+    item.classList.add("reveal-pending");
+    item.style.setProperty("--reveal-delay", `${(index % 3) * 75}ms`);
+    portfolioRevealObserver.observe(item);
+  });
+}
+
 portfolioFilters?.querySelectorAll(".chip").forEach((btn) => {
   btn.addEventListener("click", () => {
     portfolioFilters.querySelectorAll(".chip").forEach((b) => b.classList.remove("active"));
@@ -158,7 +177,6 @@ const heroDots = document.querySelectorAll("#hero-dots button");
 const heroSlider = document.querySelector(".hero-slider");
 const heroPrev = document.getElementById("hero-prev");
 const heroNext = document.getElementById("hero-next");
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 let heroIndex = 0;
 let heroTimer = null;
 
@@ -332,10 +350,13 @@ function initTestiSlider() {
   let page = 0;
 
   // Un punto por cada página
-  dotsWrap.innerHTML = Array.from({ length: pageCount })
-    .map((_, i) => `<button aria-label="Ver reseñas, página ${i + 1}"></button>`)
-    .join("");
-  const dots = [...dotsWrap.querySelectorAll("button")];
+  const dots = Array.from({ length: pageCount }, (_, i) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Ver reseñas, página ${i + 1}`);
+    return dot;
+  });
+  dotsWrap.replaceChildren(...dots);
 
   function show(newPage) {
     page = (newPage + pageCount) % pageCount;
@@ -530,15 +551,28 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
   box.setAttribute("role", "dialog");
   box.setAttribute("aria-modal", "true");
   box.setAttribute("aria-label", "Foto del portafolio");
-  box.innerHTML = `
-    <button class="lightbox-close" aria-label="Cerrar">✕</button>
-    <button class="lightbox-prev" aria-label="Foto anterior">‹</button>
-    <figure><img alt=""><figcaption></figcaption></figure>
-    <button class="lightbox-next" aria-label="Foto siguiente">›</button>`;
+
+  const makeLightboxButton = (className, label, text) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.setAttribute("aria-label", label);
+    button.textContent = text;
+    return button;
+  };
+  const closeButton = makeLightboxButton("lightbox-close", "Cerrar", "✕");
+  const previousButton = makeLightboxButton("lightbox-prev", "Foto anterior", "‹");
+  const nextButton = makeLightboxButton("lightbox-next", "Siguiente foto", "›");
+  const figure = document.createElement("figure");
+  const lightboxImage = document.createElement("img");
+  lightboxImage.alt = "";
+  const lightboxCaption = document.createElement("figcaption");
+  figure.append(lightboxImage, lightboxCaption);
+  box.replaceChildren(closeButton, previousButton, figure, nextButton);
   document.body.appendChild(box);
 
-  const img = box.querySelector("img");
-  const caption = box.querySelector("figcaption");
+  const img = lightboxImage;
+  const caption = lightboxCaption;
   let current = 0;
   let lastFocus = null;
 
@@ -564,7 +598,7 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
     show(item);
     box.classList.add("open");
     document.body.style.overflow = "hidden";
-    box.querySelector(".lightbox-close").focus();
+    closeButton.focus();
   }
 
   function close() {
@@ -583,9 +617,9 @@ setRatingBadge(GOOGLE_RATING_MANUAL.rating, GOOGLE_RATING_MANUAL.total);
     });
   });
 
-  box.querySelector(".lightbox-close").addEventListener("click", close);
-  box.querySelector(".lightbox-prev").addEventListener("click", () => step(-1));
-  box.querySelector(".lightbox-next").addEventListener("click", () => step(1));
+  closeButton.addEventListener("click", close);
+  previousButton.addEventListener("click", () => step(-1));
+  nextButton.addEventListener("click", () => step(1));
   box.addEventListener("click", (e) => {
     if (e.target === box) close();
   });
