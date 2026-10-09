@@ -1489,6 +1489,8 @@ body::before {
   max-height: 78vh;
   margin: 0 auto;
   object-fit: contain;
+  cursor: ew-resize;
+  touch-action: pan-y;
 }
 
 .lightbox figcaption {
